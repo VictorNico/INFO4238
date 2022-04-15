@@ -29,3 +29,7 @@ struct Images{
 void drawKDEChartOfImageWithinPathInputAndOutpout(Images *image);
 void LoadImageMatrix(Images *image);
 void drawKDEChartOfImageWithinImageMatrix(Images *image);
+void WriteNewImage(Images *image);
+void ContrastComputation(Images *image,Images *imageC);
+void LuminanceComputation(Images *image, Images *imageL);
+void EqualizeComputation(Images *image, Images *imageE);
