@@ -19,17 +19,37 @@ struct Images{
   int **image;
   int rows;
   int cols;
-  char* format;
+  double* Hist;
+  char format[3];
   char* chartName;
+  char* outPath;
   char* comment;
   char* path;
+  _Bool rotated;
 };
 
 // prototype
-void drawKDEChartOfImageWithinPathInputAndOutpout(Images *image);
+void DrawKDEChartOfImageWithinPathInputAndOutpout(Images *image);
 void LoadImageMatrix(Images *image);
-void drawKDEChartOfImageWithinImageMatrix(Images *image);
+void DrawKDEChartOfImageWithinImageMatrix(Images *image);
+// TODO: 
 void WriteNewImage(Images *image);
-void ContrastComputation(Images *image,Images *imageC);
-void LuminanceComputation(Images *image, Images *imageL);
-void EqualizeComputation(Images *image, Images *imageE);
+void InvertComputation(Images *image,Images *imageC);
+void GetInteger(char *message,int *variable);
+void GetString(char *message,char *variable);
+void GetChar(char *message,char *variable);
+void Rotate90DegreeClockwizeImage(Images *image,Images *imageR);
+void Rotate90DegreeAntiClockwizeImage(Images *image,Images *imageR);
+void CopyImageData(Images *image,Images *imageC);
+long long IntToBin(int n);
+int BinToInt(long long n);
+// void smoothComputation(Images *image,Images *imageC);
+// void IncBrightnessComputation(Images *image, Images *imageL);
+// void DecBrightnessComputation(Images *image, Images *imageL);
+// void IncContrastComputation(Images *image, Images *imageL);
+// void DecContrastComputation(Images *image, Images *imageL);
+// void EqualizationComputation(Images *image, Images *imageE);
+
+/*
+  about invalidate format of custom write files, it's due to missing that the first pixel code the max length of value so will be 1 or 255.
+*/
