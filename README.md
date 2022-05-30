@@ -1,6 +1,7 @@
 # INFO4238
 Computer Vision Assigments
 
+## Trainings
 * TODO: 
 	* [x] DrawKDEChartOfImageWithinPathInputAndOutpout
 	* [x] LoadImageMatrix
@@ -19,3 +20,114 @@ Computer Vision Assigments
 	* [ ] IncContrastComputation
 	* [ ] DecContrastComputation
 	* [ ] EqualizationComputation
+
+## Base coding
+* Matrix manipulation
+	* [ ] Create Empty matrix
+	* [ ] Copy matrix
+	* [ ] Free Matrix
+* Image structure manipulation : Macro
+	* [ ] Create Instance
+	* [ ] Free Instance
+	* [ ] Copy Instance
+* File manipulation
+	* [ ] Get file ReadStream
+	* [ ] Get file WriteStream
+	* [ ] Close file Stream
+* Primary types manipulation
+	* [ ] type switching
+		* [ ] Int to Bin
+		* [ ] Bin to Int
+	* [ ] binary operation
+		* [ ] And
+		* [ ] Or
+		* [ ] Xor
+		* [ ] Not And
+* ...
+## Libraries including for computation enhance
+* Plotting
+	* [ ] Plot charts
+		* [ ] Line
+		* [ ] Bar
+		* [ ] Kde
+* ...
+## Class coding
+* Chapter 1: Introduction
+	* [ ] GetImage Properties
+		* [ ] Type of the image
+		* [ ] Image Representation
+			* [ ] Spatial resolution
+			* [ ] Tonale resolution
+		* [ ] Image format
+	* [ ] Image Intensity plot
+* Chapter 2: Base Traitment
+	* [ ] Get Histogram Matrix
+	* [ ] Plot histogram
+	* [ ] Get image luninance
+	* [ ] Get image contrast
+		* [ ] Ecart-type approach
+		* [ ] Min Max approach
+	* [ ] boost image contrast
+		* [ ] Linear transformation
+		* [ ] Linear transformation with saturation
+		* [ ] Linear transformation per part
+		* [ ] Non linear transformation
+		* [ ] Histogram egalisation
+			* [ ] Local
+			* [ ] Global
+	* [ ] Dynamic of Image correction
+	* [ ] Image operation
+		* [ ] just for binary Images
+			* [ ] And
+			* [ ] Or
+			* [ ] Xor
+			* [ ] Not And
+		* [ ] Images addition
+		* [ ] Images soustraction
+		* [ ] Images multiplication
+		* [ ] Image Interpolation
+			* [ ] Nearest neighbord 
+			* [ ] Bilinear interpolation
+			* [ ] Bicubic interpolation
+* Chapter 3: Convolution
+	* [ ] Create filter
+		* [ ] Means filter
+		* [ ] Median filter
+		* [ ] Gaussian filter
+		* [ ] Gradient filter
+		* [ ] Laplacien filter
+	* [ ] Make convolution
+		* [ ] Means filter
+		* [ ] Median filter
+		* [ ] Gaussian filter
+* Chapter 4:  FFT (Fast Fourrier Transform)
+	* [ ] FFT
+	* [ ] FFT inverse
+* Chapter 5: Outline
+	* [ ] Create filter
+		* [ ] Robert filter
+		* [ ] Prewitt
+		* [ ] Sobel filter
+		* [ ] Gradient filter
+		* [ ] Laplacien filter
+	* [ ] Make detection
+		* [ ] Robert filter
+		* [ ] Prewitt
+		* [ ] Sobel filter
+		* [ ] Gradient filter
+		* [ ] Laplacien filter
+	* [ ] Hough Transform
+* Chapter 6: Segmentation
+	* [ ] Image thresholding
+		* [ ] Binararisation
+		* [ ] Multi thresholding
+	* [ ] get the best threshold
+		* [ ] Otsu
+	* [ ] Adaptative thresholding
+	* [ ] K-means
+	* [ ] Split-and-merge
+	* [ ] Region growth
+		* [ ] One germe
+		* [ ] Multi germe
+* Chapter 6: Binary images
+	* [ ] ...
