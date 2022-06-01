@@ -23,17 +23,24 @@ Computer Vision Assigments
 
 ## Base coding
 * Matrix manipulation
-	* [ ] Create Empty matrix
-	* [ ] Copy matrix
-	* [ ] Free Matrix
+	* [x] Create Empty matrix
+	* [x] Create Empty vector
+	* [x] Copy matrix
+	* [x] Free Matrix
 * Image structure manipulation : Macro
-	* [ ] Create Instance
-	* [ ] Free Instance
-	* [ ] Copy Instance
+	* [x] Create Instance
+	* [x] Free Instance
+	* [x] Copy Instance
+	* [x] Get histogram
+	* [x] Plot Histogram
 * File manipulation
-	* [ ] Get file ReadStream
-	* [ ] Get file WriteStream
-	* [ ] Close file Stream
+	* [x] Get file ReadStream
+	* [x] Get file WriteStream
+	* [x] Close file Stream
+	* [x] RAccess
+	* [x] FAccess
+	* [x] XAccess
+	* [x] WAccess
 * Primary types manipulation
 	* [ ] type switching
 		* [ ] Int to Bin
@@ -47,9 +54,9 @@ Computer Vision Assigments
 ## Libraries including for computation enhance
 * Plotting
 	* [ ] Plot charts
-		* [ ] Line
-		* [ ] Bar
-		* [ ] Kde
+		* [x] Line
+		* [x] Bar
+		* [x] Kde
 * ...
 ## Class coding
 * Chapter 1: Introduction
