@@ -448,7 +448,7 @@ Images *LinearSaturatedTransform(Images *image, int min, int max)
 	fprintf(stderr,"\nEmpty Image\n");
 	return NULL;
 }
-Images *LinearPieceTransform(int **d, int n_ligne, int n_col, int *s, int *v, int len)
+Images *LinearPieceWiseTransform(Images *image, int *s, int *v, int len)
 {
     int **result = changer_plage(d, n_ligne, n_col, 0, s[0], 0, v[0]);
     int i;
@@ -477,29 +477,35 @@ Images *LinearPieceTransform(int **d, int n_ligne, int n_col, int *s, int *v, in
             result[ind][j] = LUT[d[ind][j]];
     return result;
 }
-// int **egalizer_hist(int **d, int n_ligne, int n_col)
-// {
-//     int **result = create_matrix(n_ligne, n_col);
-//     int *hist = histogram(d, n_ligne, n_col);
-//     int n = n_ligne * n_col;
-//     double *c = malloc(256 * sizeof(double));
-//     int i = 0;
-//     for (i = 0; i < 256; i++)
-//     {
-//         c[i] = hist[i];
-//         c[i] /= n;
-//     }
+Images *Egalization(Images *image)
+{
+	if(image != NULL && image->image != NULL && image->rows != 0 && image->cols != 0){
+        Images *result = CreateIInstance();
+        if(CopyImageData(image,result) == 0){
+        	fprintf(stderr,"\nError during Image copy\n");
+            return NULL;
+        }
+        if(result->Hist == NULL){
+        	GetHist(image); // compute histogram
+        }
+        // compute cumulate sum Hist
+        int sum = 0;
+        double * cumH = CreateVector(256);
+        for (int i = 0; i < image->rows; i++){
+            sum += result->Hist[i]
+            cumH[i] = sum;
 
-//     for (i = 1; i < 256; i++)
-//         c[i] += c[i - 1];
-
-//     int j = 0;
-//     for (i = 0; i < n_ligne; i++)
-//         for (j = 0; j < n_col; j++)
-//             result[i][j] = c[d[i][j]] * 255;
-
-//     return result;
-// }
+        }
+        // compute transformation
+        double area = image->rows*image->cols;
+        int Dm = 256;
+        for (int i = 0; i < image->rows; i++)
+            for (int j = 0; j < image->cols; j++)
+                result->image[i][j] = (int) ((area/Dm)*cumH[image->image[i][j]]);
+    }
+    fprintf(stderr,"\nEmpty Image\n");
+    return NULL;
+}
 // int **interpolation_knn(int **d, int n_ligne, int n_col, int ki, int kj){
 //     int **result = create_matrix(n_ligne*ki, n_col*kj);
 //     int i=0, j=0, vali=0,valj=0;

@@ -47,3 +47,4 @@ Images *ImageTime(Images *image, double factor);
 Images *SoustractionOfTwoImages(Images *image1,Images *image2);
 Images *LinearTransform(Images *image);
 Images *LinearSaturatedTransform(Images *image, int min, int max);
+Images *Egalization(Images *image);
