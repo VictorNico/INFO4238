@@ -1,8 +1,9 @@
 #include "image.h"
 
-
+// BASED IMAGE COMPUTING
 // create image instance
-Images *CreateIInstance(){
+Images *CreateIInstance()
+{
 	Images *img = (Images *)malloc(sizeof(Images));
 	if(img == NULL){
 		// catch error
@@ -14,7 +15,8 @@ Images *CreateIInstance(){
 	}
 }
 // free image instance
-_Bool FreeIInstance(Images *img){
+_Bool FreeIInstance(Images *img)
+{
 	if(img){ // check if exist and allocated
 		// free malloc allocations
 		// if(img->path && img->path != NULL){ // check if exist and allocated
@@ -55,8 +57,47 @@ _Bool FreeIInstance(Images *img){
 	}
 	return 0;
 }
+// copy instance
+_Bool CopyImageData(Images *src,Images *dst)
+{
+	printf("\t7");
+	if(src->outPath != NULL){
+	    dst->outPath = (char *) malloc(100*sizeof(char));
+	    memcpy(dst->outPath, src->outPath, 100*sizeof(char));
+	}
+	printf("\t7");
+	if((sizeof(src->format)/sizeof(src->format[0]))>0){
+	    // imageC->format = malloc(3*sizeof(char));
+	    memcpy(dst->format, src->format, 3*sizeof(char));
+	}
+	printf("\t7");
+	if(src->chartName != NULL){
+	    dst->chartName = (char *)malloc(100*sizeof(char));
+	    memcpy(dst->chartName, src->chartName, 100*sizeof(char));
+	}
+	printf("\t7");
+	if(src->comment != NULL){
+	    dst->comment = (char *)malloc(100*sizeof(char));
+	    memcpy(dst->comment, src->comment, 100*sizeof(char));
+	}
+	printf("\t7");
+	if(src->path != NULL){
+	    dst->path = (char *)malloc(100*sizeof(char));
+	    memcpy(dst->path, src->path, 100*sizeof(char));
+	}
+	printf("\t7");
+	if(src->rows)
+    	dst->rows = src->rows;
+	if(src->cols)
+    	dst->cols = src->cols;
+    if(src->maxPixel)
+    	dst->maxPixel = src->maxPixel;	
+    printf("\t7");
+    return 1;
+}
 // load image file content
-Images *ReadNotCompressedImg(char *path){
+Images *ReadNotCompressedImg(char *path)
+{
 	FILE *file = GetReadStream(path); // get stream
 	if(file == NULL){ // 
 		// catch error
@@ -96,10 +137,10 @@ Images *ReadNotCompressedImg(char *path){
 
 	}
 	return NULL;
-
 }
 // write image
-_Bool WriteNotCompressedImg(Images *image){
+_Bool WriteNotCompressedImg(Images *image)
+{
 	FILE *file = GetWriteStream(image->outPath); // get stream
 	if(file == NULL){ // 
 		// catch error
@@ -128,7 +169,8 @@ _Bool WriteNotCompressedImg(Images *image){
 	return 0;
 }
 // get image Histogram
-double *GetHist(Images *image){
+double *GetHist(Images *image)
+{
 	char P3[3] = "P3";
 	char P2[3] = "P2";
 	image->Hist = CreateVector(((strcmp(image->format, P3) == 0) || (strcmp(image->format , P2) == 0))? 256:2);
@@ -147,7 +189,8 @@ double *GetHist(Images *image){
 	}
 }
 // plot hist img
-_Bool PlotHist(Images *image){
+_Bool PlotHist(Images *image)
+{
 	if(image->Hist != NULL){
 		char P3[3] = "P3";
 		char P2[3] = "P2";
@@ -195,48 +238,298 @@ double GetLuminance(Images *image)
 	
 	    return sum / (image->cols * image->rows);
 	}
-	return NULL;
+	return -1;
 }
 // get image maximum pixel
 int GetMaxiPixel(Images *image)
 {
 	if(image != NULL && image->image != NULL && image->rows != 0 && image->cols != 0){
 	    int max = 0;
-	    for (int i = 0; i < n_ligne; i++)
-	        for (int j = 0; j < n_col; j++)
+	    for (int i = 0; i < image->rows; i++)
+	        for (int j = 0; j < image->cols; j++)
 	            if (image->image[i][j] > max)
 	                max = image->image[i][j];
 	    return max;
 	}
-	return NULL;
+	return -1;
 }
 // get image minimum pixel
 int GetMiniPixel(Images *image)
 {
 	if(image != NULL && image->image != NULL && image->rows != 0 && image->cols != 0){
 	    int max = 0;
-	    for (int i = 0; i < n_ligne; i++)
-	        for (int j = 0; j < n_col; j++)
+	    for (int i = 0; i < image->rows; i++)
+	        for (int j = 0; j < image->cols; j++)
 	            if (image->image[i][j] < max)
 	                max = image->image[i][j];
 	    return max;
 	}
-	return NULL;
+	return -1;
 }
 // compute contrast within ecart type approach
 double GetContrastEcartType(Images *image)
 {
-    double moy = GetLuminance(image);
-    double result = 0;
-    for (i = 0; i < n_ligne; i++)
-        for (j = 0; j < n_col; j++)
-            result += pow((double)(d[i][j]) - moy, 2.0);
+	if(image != NULL && image->image != NULL && image->rows != 0 && image->cols != 0){
+	    double means = GetLuminance(image);
+	    double result = 0;
+	    for (int i = 0; i < image->rows; i++)
+	        for (int j = 0; j < image->cols; j++)
+	            result += pow((double)(image->image[i][j]) - means, 2.0);
 
-    return sqrt(result / (n_col * n_ligne));
+    	return sqrt(result / (image->rows * image->cols));
+    }
+    return -1;
 }
 // compute contrast within min max approach
-double GetContrastMinMax(int **d, int n_ligne, int n_col)
+double GetContrastMinMax(Images *image)
 {
-    int min = GetMiniPixel(d, n_ligne, n_col), max = GetMaxiPixel(d, n_ligne, n_col);
-    return ((double)(max - min)) / (max + min);
+	if(image != NULL && image->image != NULL && image->rows != 0 && image->cols != 0){
+	    int min = GetMiniPixel(image), max = GetMaxiPixel(image);
+	    return ((double)(max - min)) / (max + min);
+	}
+	return -1;
 }
+// addition bettween two images
+Images *AdditionOfTwoImages(Images *image1,Images *image2)
+{
+	if((image1 != NULL && image1->image != NULL && image1->rows != 0 && image1->cols != 0) && 
+		(image2 != NULL && image2->image != NULL && image2->rows != 0 && image2->cols != 0) &&
+		(image1->rows==image2->rows && image1->cols==image2->cols)){
+	    Images *result = CreateIInstance();
+		if(CopyImageData(image1,result)){
+			return NULL;
+		}
+		result->image = CreateMatrix(image1->cols,image1->rows);
+	    for (int i = 0; i < image1->rows; i++)
+	    {
+	        for (int j = 0; j < image1->cols; j++)
+	        {
+	            result->image[i][j] = image1->image[i][j] + image2->image[i][j];
+	            if (result->image[i][j] >= 255)
+	                result->image[i][j] = 255;
+	        }
+	    }
+	    return result;
+	}
+	return NULL;
+}
+// Image factor times
+Images *ImageTime(Images *image, double factor)
+{
+	if(image != NULL && image->image != NULL && image->rows != 0 && image->cols != 0){
+		Images *result = CreateIInstance();
+		if(CopyImageData(image,result)){
+			return NULL;
+		}
+	    result->image = CreateMatrix(image->cols,image->rows);
+	    for (int i = 0; i < image->rows; i++)
+	    {
+	        for (int j = 0; j < image->cols; j++)
+	        {
+	            result->image[i][j] = factor * image->image[i][j];
+	            if (result->image[i][j] > 255)
+	                result->image[i][j] = 255;
+	            if (result->image[i][j] < 0)
+	                result->image[i][j] = 0;
+	        }
+	    }
+	    return result;
+	}
+	return NULL;
+}
+// soustraction between two images
+Images *SoustractionOfTwoImages(Images *image1,Images *image2)
+{
+    if((image1 != NULL && image1->image != NULL && image1->rows != 0 && image1->cols != 0) && 
+		(image2 != NULL && image2->image != NULL && image2->rows != 0 && image2->cols != 0) &&
+		(image1->rows==image2->rows && image1->cols==image2->cols)){
+	    Images *result = CreateIInstance();
+		if(CopyImageData(image1,result)){
+			return NULL;
+		}
+		result->image = CreateMatrix(image1->cols,image1->rows);
+	    for (int i = 0; i < image1->rows; i++)
+	    {
+	        for (int j = 0; j < image1->cols; j++)
+	        {
+	            result->image[i][j] = image1->image[i][j] - image2->image[i][j];
+	            if (result->image[i][j] < 0)
+	                result->image[i][j] = 0;
+	        }
+	    }
+	    return result;
+	}
+	return NULL;
+}
+// // AND binary image computation
+// Images *et_(int **d1, int **d2, int n_ligne, int n_col, int a)
+// {
+//     int **d = create_matrix(n_ligne, n_col);
+//     int i = 0, j = 0;
+//     for (i = 0; i < n_ligne; i++)
+//     {
+//         for (j = 0; j < n_ligne; j++)
+//         {
+//             d[i][j] = a;
+//             if (d1[i][j] == 0)
+//                 d[i][j] = d2[i][j];
+//         }
+//     }
+//     return d;
+// }
+// // OR binary image computation
+// Images *ou_(int **d1, int **d2, int n_ligne, int n_col, int a)
+// {
+//     int **d = create_matrix(n_ligne, n_col);
+//     int i = 0, j = 0;
+//     for (i = 0; i < n_ligne; i++)
+//     {
+//         for (j = 0; j < n_ligne; j++)
+//         {
+//             d[i][j] = a;
+//             if (d1[i][j] == 1)
+//                 d[i][j] = d2[i][j];
+//         }
+//     }
+//     return d;
+// }
+
+// TRANSFORMATION COMPUTING
+// linear transformation
+Images *LinearTransform(Images *image)
+{ 
+    if(image != NULL && image->image != NULL && image->rows != 0 && image->cols != 0){
+        Images *result = CreateIInstance();
+        if(CopyImageData(image,result) == 0){
+        	fprintf(stderr,"\nError during Image copy\n");
+            return NULL;
+        }
+        result->image = CreateMatrix(image->cols,image->rows);
+        int min = GetMiniPixel(image), max = GetMaxiPixel(image);
+        int LUT[256];
+        for (int i = 0; i < 256; i++)
+            LUT[i] = (255 * (i - min)) / (max - min);
+
+        for (int i = 0; i < image->rows; i++)
+            for (int j = 0; j < image->cols; j++)
+                result->image[i][j] = LUT[image->image[i][j]];
+        return result;
+    }
+    fprintf(stderr,"\nEmpty Image\n");
+    return NULL;
+}
+// linear transformation with saturation
+Images *LinearSaturatedTransform(Images *image, int min, int max)
+{
+	if(image != NULL && image->image != NULL && image->rows != 0 && image->cols != 0){
+        Images *result = CreateIInstance();
+        if(CopyImageData(image,result) == 0){
+        	fprintf(stderr,"\nError during Image copy\n");
+            return NULL;
+        }
+	    result->image = CreateMatrix(image->cols,image->rows);
+        int mini = GetMiniPixel(image), maxi = GetMaxiPixel(image);
+        if((mini<min) && (min<max) && (max<maxi)){
+    	    for (int i = 0; i < image->rows; i++){
+    	        for (int j = 0; j < image->cols; j++){
+    	            result->image[i][j] = (255 * (image->image[i][j] - min)) / (max - min);
+	    	        if (result->image[i][j] < 0)
+	    	            result->image[i][j] = 0;
+	    	        if (result->image[i][j] > 255)
+	    	            result->image[i][j] = 255;
+    	        }
+    	    }
+
+    	    return result;
+    	}
+    	fprintf(stderr,"\nError predicat : Imin<min<max<Imax is not satisfy \n");
+    	return NULL;
+	}
+	fprintf(stderr,"\nEmpty Image\n");
+	return NULL;
+}
+Images *LinearPieceTransform(int **d, int n_ligne, int n_col, int *s, int *v, int len)
+{
+    int **result = changer_plage(d, n_ligne, n_col, 0, s[0], 0, v[0]);
+    int i;
+    int ind = 0, j = 0;
+    int LUT[256];
+    for (i = 0; i < 256; i++)
+    {
+        if (ind < len && i >= s[ind])
+            ind++;
+
+        if (ind == 0)
+        {
+            LUT[i] = v[0] * (i-s[0]) / s[0] + v[0];
+        }
+        else if (ind >= len)
+        {
+            LUT[i] = (255 - v[ind - 1]) * (i - 255) / (255 - s[ind - 1]) + 255;
+        }
+        else
+        {
+            LUT[i] = (v[ind] - v[ind - 1]) * (i - s[ind]) / (s[ind] - s[ind - 1])+v[ind];
+        }
+    }
+    for (ind = 0; ind < n_ligne; ind++)
+        for (j = 0; j < n_col; j++)
+            result[ind][j] = LUT[d[ind][j]];
+    return result;
+}
+// int **egalizer_hist(int **d, int n_ligne, int n_col)
+// {
+//     int **result = create_matrix(n_ligne, n_col);
+//     int *hist = histogram(d, n_ligne, n_col);
+//     int n = n_ligne * n_col;
+//     double *c = malloc(256 * sizeof(double));
+//     int i = 0;
+//     for (i = 0; i < 256; i++)
+//     {
+//         c[i] = hist[i];
+//         c[i] /= n;
+//     }
+
+//     for (i = 1; i < 256; i++)
+//         c[i] += c[i - 1];
+
+//     int j = 0;
+//     for (i = 0; i < n_ligne; i++)
+//         for (j = 0; j < n_col; j++)
+//             result[i][j] = c[d[i][j]] * 255;
+
+//     return result;
+// }
+// int **interpolation_knn(int **d, int n_ligne, int n_col, int ki, int kj){
+//     int **result = create_matrix(n_ligne*ki, n_col*kj);
+//     int i=0, j=0, vali=0,valj=0;
+//     for (i = 0; i < n_ligne; i++)
+//         for (j = 0; j < n_col; j++)
+//             for (vali = i*ki; vali < ki*(i+1); vali++)
+//                 for (valj = j*kj; valj < kj*(j+1); valj++)
+//                     result[vali][valj] = d[i][j];
+//     return result;
+// }
+// int **interpolation_bilineaire(int **d, int n_ligne, int n_col){
+//     int nl= n_ligne*2-1,nc= n_col*2-1;
+//     int **result = create_matrix(nl, nc);
+//     int i=0, j=0;
+//     for (i = 0; i < n_ligne; i++){
+//         for (j = 0; j < n_col; j++){
+//             result[2*i][2*j]=d[i][j];
+//             if (2*i+1 < nl)
+//             {
+//                 result[2*i+1][2*j]=(d[i][j]+d[i+1][j])/2;
+//             }
+//             if (2*j+1 < nc)
+//             {
+//                 result[2*i][2*j+1]=(d[i][j]+d[i][j+1])/2;
+//             }
+//             if (2*i+1 < nl && 2*j+1 < nc )
+//             {
+//                 result[2*i+1][2*j+1]=(d[i][j]+d[i+1][j]+d[i][j+1]+d[i+1][j+1])/4;
+//             }
+//         }
+//     }
+//     return result;
+// }

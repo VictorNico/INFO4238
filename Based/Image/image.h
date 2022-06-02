@@ -1,4 +1,6 @@
 // header
+#include "../Header/header.h"
+// header
 #include "../File/file.h"
 #include "../Matrix/matrix.h"
 // libs importation
@@ -37,3 +39,11 @@ _Bool FreeIInstance(Images *img);
 double *GetHist(Images *image);
 _Bool PlotHist(Images *image);
 double GetLuminance(Images *image);
+_Bool CopyImageData(Images *src,Images *dst);
+double GetContrastEcartType(Images *image);
+double GetContrastMinMax(Images *image);
+Images *AdditionOfTwoImages(Images *image1,Images *image2);
+Images *ImageTime(Images *image, double factor);
+Images *SoustractionOfTwoImages(Images *image1,Images *image2);
+Images *LinearTransform(Images *image);
+Images *LinearSaturatedTransform(Images *image, int min, int max);
