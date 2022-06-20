@@ -2,6 +2,9 @@
 
 // BASED IMAGE COMPUTING
 // create image instance
+
+// 1-UTILS
+
 Images *CreateIInstance()
 {
 	Images *img = (Images *)malloc(sizeof(Images));
@@ -50,7 +53,7 @@ _Bool FreeIInstance(Images *img)
 	    	FreeMatrix(img->image,img->rows);
 	    	img->image = NULL;
 	    }
-		printf("\t7");
+		// printf("\t7");
 	    free(img);
 	    img = NULL;
 	    return 1;
@@ -168,6 +171,9 @@ _Bool WriteNotCompressedImg(Images *image)
 	}
 	return 0;
 }
+
+// 2- BASED OPERATIONS
+
 // get image Histogram
 double *GetHist(Images *image)
 {
@@ -257,7 +263,7 @@ int GetMaxiPixel(Images *image)
 int GetMiniPixel(Images *image)
 {
 	if(image != NULL && image->image != NULL && image->rows != 0 && image->cols != 0){
-	    int max = 0;
+	    int max = 256;
 	    for (int i = 0; i < image->rows; i++)
 	        for (int j = 0; j < image->cols; j++)
 	            if (image->image[i][j] < max)
@@ -285,6 +291,7 @@ double GetContrastMinMax(Images *image)
 {
 	if(image != NULL && image->image != NULL && image->rows != 0 && image->cols != 0){
 	    int min = GetMiniPixel(image), max = GetMaxiPixel(image);
+	    printf("\nmin:%d\tmax:%d\n",min,max);
 	    return ((double)(max - min)) / (max + min);
 	}
 	return -1;
@@ -448,35 +455,52 @@ Images *LinearSaturatedTransform(Images *image, int min, int max)
 	fprintf(stderr,"\nEmpty Image\n");
 	return NULL;
 }
-Images *LinearPieceWiseTransform(Images *image, int *s, int *v, int len)
+// Linear Piece Wise Transformer
+Images *LinearPieceWiseTransform(Images *image, int smax, int smin, int s)
 {
-    int **result = changer_plage(d, n_ligne, n_col, 0, s[0], 0, v[0]);
-    int i;
-    int ind = 0, j = 0;
-    int LUT[256];
-    for (i = 0; i < 256; i++)
-    {
-        if (ind < len && i >= s[ind])
-            ind++;
-
-        if (ind == 0)
-        {
-            LUT[i] = v[0] * (i-s[0]) / s[0] + v[0];
+	if(image != NULL && image->image != NULL && image->rows != 0 && image->cols != 0){
+        Images *result = CreateIInstance();
+        if(CopyImageData(image,result) == 0){
+        	fprintf(stderr,"\nError during Image copy\n");
+            return NULL;
         }
-        else if (ind >= len)
-        {
-            LUT[i] = (255 - v[ind - 1]) * (i - 255) / (255 - s[ind - 1]) + 255;
-        }
-        else
-        {
-            LUT[i] = (v[ind] - v[ind - 1]) * (i - s[ind]) / (s[ind] - s[ind - 1])+v[ind];
-        }
+        // copy image data
+        result->image = CreateMatrix(image->cols,image->rows);
+        for (int i = 0; i < image->rows; i++)
+            for (int j = 0; j < image->cols; j++)
+                result->image[i][j] = image->image[i][j];
+        // copy hist
+        result->Hist = CreateVector(256);
+        for (int i = 0; i < image->rows; i++)
+        	result->Hist[i] = image->Hist[i];
+        // compute pente l,m,n
+        double l = 0, m=0, n=0;
+        int mini = GetMiniPixel(image), maxi = GetMaxiPixel(image);
+        l = round((Hist[smin] - Hist[mini])/(smin-mini));
+        m = round((Hist[smax] - Hist[smin])/(smax-smin));
+        n = round((Hist[maxi] - Hist[smax])/(maxi-smax));
+        // apply ponctual transformation
+        for (int i = 0; i < image->rows; i++){
+	        for (int j = 0; j < image->cols; j++){
+    	        if (mini <= image->image[i][j] < smin)
+    	            result->image[i][j] = (int)image->image[i][j] * l;
+    	        if (smin <= image->image[i][j] < smax)
+    	            result->image[i][j] = (int) m*(image->image[i][j]-smin) + image->image[i][j];
+    	        if (smax <= image->image[i][j] < maxi)
+    	            result->image[i][j] = (int) n*(image->image[i][j]-smax) + image->image[i][j];
+    	        // control dynamic stretch
+    	        if (result->image[i][j] < 0)
+    	            result->image[i][j] = 0;
+    	        if (result->image[i][j] > 255)
+    	            result->image[i][j] = 255;
+	        }
+	    }
+        return result;
     }
-    for (ind = 0; ind < n_ligne; ind++)
-        for (j = 0; j < n_col; j++)
-            result[ind][j] = LUT[d[ind][j]];
-    return result;
+    fprintf(stderr,"\nEmpty Image\n");
+    return NULL;
 }
+// histogram egalization
 Images *Egalization(Images *image)
 {
 	if(image != NULL && image->image != NULL && image->rows != 0 && image->cols != 0){
@@ -485,23 +509,32 @@ Images *Egalization(Images *image)
         	fprintf(stderr,"\nError during Image copy\n");
             return NULL;
         }
-        if(result->Hist == NULL){
-        	GetHist(image); // compute histogram
-        }
-        // compute cumulate sum Hist
-        int sum = 0;
-        double * cumH = CreateVector(256);
-        for (int i = 0; i < image->rows; i++){
-            sum += result->Hist[i]
-            cumH[i] = sum;
-
-        }
-        // compute transformation
+        // copy image data
+        result->image = CreateMatrix(image->cols,image->rows);
+        for (int i = 0; i < image->rows; i++)
+            for (int j = 0; j < image->cols; j++)
+                result->image[i][j] = image->image[i][j];
+        // copy hist
+        result->Hist = CreateVector(256);
+        for (int i = 0; i < image->rows; i++)
+        	result->Hist[i] = image->Hist[i];
+        // compute normalize histogram
         double area = image->rows*image->cols;
+        for (int i = 0; i < image->rows; i++)
+        	result->Hist[i] = image->Hist[i]/area;
+        // compute cumulate sum Hist
+        double sum = 0;
+        double *cumH = CreateVector(256);
+        for (int i = 0; i < 256; i++){
+        	// printf("%d",i);
+            sum = sum + result->Hist[i];
+            cumH[i] = sum;
+        }
         int Dm = 256;
         for (int i = 0; i < image->rows; i++)
             for (int j = 0; j < image->cols; j++)
-                result->image[i][j] = (int) ((area/Dm)*cumH[image->image[i][j]]);
+                result->image[i][j] = (int) Dm*cumH[image->image[i][j]];
+        return result;
     }
     fprintf(stderr,"\nEmpty Image\n");
     return NULL;
@@ -539,3 +572,13 @@ Images *Egalization(Images *image)
 //     }
 //     return result;
 // }
+
+
+
+// 3- CONVOLUTIONS
+
+
+
+// 4- EDGES DETECTION
+
+

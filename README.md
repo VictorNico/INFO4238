@@ -54,8 +54,8 @@ Computer Vision Assigments
 ## Libraries including for computation enhance
 * Plotting
 	* [ ] Plot charts
-		* [x] Line
-		* [x] Bar
+		* [ ] Line
+		* [ ] Bar
 		* [x] Kde
 * ...
 ## Class coding
@@ -68,20 +68,20 @@ Computer Vision Assigments
 		* [ ] Image format
 	* [ ] Image Intensity plot
 * Chapter 2: Base Traitment
-	* [ ] Get Histogram Matrix
-	* [ ] Plot histogram
-	* [ ] Get image luninance
-	* [ ] Get image contrast
-		* [ ] Ecart-type approach
-		* [ ] Min Max approach
+	* [x] Get Histogram Matrix
+	* [x] Plot histogram
+	* [x] Get image luninance
+	* [x] Get image contrast
+		* [x] Ecart-type approach
+		* [x] Min Max approach
 	* [ ] boost image contrast
-		* [ ] Linear transformation
-		* [ ] Linear transformation with saturation
+		* [x] Linear transformation
+		* [x] Linear transformation with saturation
 		* [ ] Linear transformation per part
 		* [ ] Non linear transformation
-		* [ ] Histogram egalisation
-			* [ ] Local
-			* [ ] Global
+		* [x] Histogram egalisation
+			* [x] Local
+			* [x] Global
 	* [ ] Dynamic of Image correction
 	* [ ] Image operation
 		* [ ] just for binary Images
@@ -89,8 +89,8 @@ Computer Vision Assigments
 			* [ ] Or
 			* [ ] Xor
 			* [ ] Not And
-		* [ ] Images addition
-		* [ ] Images soustraction
+		* [x] Images addition
+		* [x] Images soustraction
 		* [ ] Images multiplication
 		* [ ] Image Interpolation
 			* [ ] Nearest neighbord 

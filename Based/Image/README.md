@@ -6,9 +6,9 @@
 	* [x] FreeIInstance
 	* [x] GetHist
 	* [x] PlotHist
-	* [ ] GetLuminance
-	* [ ] GetMaxiPixel
-	* [ ] GetMiniPixel
-	* [ ] GetContrastEcartType
-	* [ ] GetContrastMinMax
+	* [x] GetLuminance
+	* [x] GetMaxiPixel
+	* [x] GetMiniPixel
+	* [x] GetContrastEcartType
+	* [x] GetContrastMinMax
 	* [ ] 
